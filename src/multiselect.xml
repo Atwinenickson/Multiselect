@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="com.mendix.widget.custom.multiselect.Multiselect" needsEntityContext="true" offlineCapable="true" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>multiselect</name>
+    <description>Select from many options available in the reference selector</description>
+    <icon/>
+    <properties>
+<!-- name of the widget -->
+    <!-- <property key="name" type="attribute" defaultValue="">
+         <caption>Name</caption>
+         <category>Name</category>
+         <description>Provide senstive name to the widget</description>
+    <attributeTypes>
+           <attributeType name="String"/>
+    </attributeTypes>
+    </property>
+
+    <property key="dataAssociation" type="entity" isPath="yes" pathType="referenceSet">
+            <caption>Multi Select Source</caption>
+            <category>Data source</category>
+            <description>Select the entity in which the multi select options are stored. This property defines the reference between the context object and the tag object. </description>
+        </property> -->
+
+        <property key="check" type="string" defaultValue="">
+        <caption>Check</caption>
+        <category>Select</category>
+        <description/>
+        </property>
+</properties>
+</widget>
