@@ -5,7 +5,7 @@
     <icon/>
     <properties>
         <property key="captionName" type="string">
-            <caption>checkBoxReferenceSetSelector</caption>
+            <caption>multiselectSetSelector</caption>
             <category>behaviour</category>
             <description/>
         </property>

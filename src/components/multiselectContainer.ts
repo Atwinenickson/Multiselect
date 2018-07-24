@@ -17,7 +17,7 @@ export interface ContainerState {
     backgroundColor?: string;
 }
 
-export default class CheckBoxReferenceSetSelectorContainer extends Component<ContainerProps, ContainerState > {
+export default class MultiselectSetSelectorContainer extends Component<ContainerProps, ContainerState > {
 
     readonly state = {
         backgroundColor: undefined
@@ -55,7 +55,7 @@ export default class CheckBoxReferenceSetSelectorContainer extends Component<Con
                 return styleObject;
             }, {});
         } catch (error) {
-            CheckBoxReferenceSetSelectorContainer.logError("Failed to parse style", style, error);
+            MultiselectSetSelectorContainer.logError("Failed to parse style", style, error);
         }
 
         return {};
