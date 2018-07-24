@@ -39,5 +39,39 @@
                     <attributeType name="Float" />
                 </attributeTypes>
         </property>
+
+        <property key="sortContainer" type="object" isList="true" required="false">
+            <caption>Sort order</caption>
+            <category>Data source - XPath</category>
+            <description>The sort order of the objects</description>
+            <properties>
+                <property key="sortAttribute" type="attribute" isPath="optional" pathType="reference" entityProperty="../dataAssociation">
+                    <caption>Attribute</caption>
+                    <category>Data source</category>
+                    <description>An attribute to sort on</description>
+                    <attributeTypes>
+                        <attributeType name="AutoNumber"/>
+                        <attributeType name="Boolean"/>
+                        <attributeType name="Currency"/>
+                        <attributeType name="DateTime"/>
+                        <attributeType name="Enum"/>
+                        <attributeType name="Float"/>
+                        <attributeType name="Integer"/>
+                        <attributeType name="Long"/>
+                        <attributeType name="String"/>
+                    </attributeTypes>
+                </property>
+                <property key="sortOrder" type="enumeration" defaultValue="asc">
+                    <caption>Order</caption>
+                    <category>Data source</category>
+                    <description>The order in which to sort</description>
+                    <enumerationValues>
+                        <enumerationValue key="asc">Ascending</enumerationValue>
+                        <enumerationValue key="desc">Descending</enumerationValue>
+                    </enumerationValues>
+                </property>
+            </properties>
+        </property>
+
 </properties>
 </widget>

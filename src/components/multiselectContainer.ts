@@ -1,6 +1,6 @@
 import { Component, createElement } from "react";
 
-import "../ui/checkBoxReferenceSetSelector.scss";
+// import "../ui/checkBoxReferenceSetSelector.scss";
 
 interface WrapperProps {
     class: string;
@@ -37,7 +37,7 @@ export default class CheckBoxReferenceSetSelectorContainer extends Component<Con
             {
                 className: "multiselect"
             },
-            createElement("label"),
+            createElement("lab~el"),
             createElement("input", { type: "checkbox", className: "check-box", onChange: this.handleChange.bind(this) })
         );
     }
