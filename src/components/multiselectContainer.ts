@@ -1,6 +1,6 @@
 import { Component, createElement } from "react";
 
-import "../ui/multiselect.scss";
+import "../ui/checkBoxReferenceSetSelector.scss";
 
 interface WrapperProps {
     class: string;
@@ -12,14 +12,19 @@ interface WrapperProps {
 }
 
 export interface ContainerProps extends WrapperProps {
-    check: string;
+    checkBox: string;
 }
 
 export interface ContainerState {
-    check?: string;
+    backgroundColor?: string;
 }
 
-export default class MultiselectContainer extends Component<ContainerProps, ContainerState> {
+export default class CheckBoxReferenceSetSelectorContainer extends Component<ContainerProps, ContainerState > {
+
+    readonly state = {
+        backgroundColor: undefined
+    };
+
     constructor(props: ContainerProps) {
         super(props);
 
@@ -27,14 +32,35 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
     }
 
     render() {
-        const { mxObject } = this.props;
-        const choose = mxObject ? mxObject.get(this.props.check) : "";
-        return createElement("div", { className: "form-group multiSelectMainContainer" },
-        createElement("label", { className: "control-label multiSelectLabel" }),
-            createElement("div", {}, createElement("select", { className: "form-control multiSelect" },
-                createElement("option", { value : choose }, "USA"),
-                createElement("option", { value: choose }, "EUROPE"),
-                createElement("option", { value: choose }, "AFRICA"))));
+
+        return createElement("div",
+            {
+                className: "multiselect"
+            },
+            createElement("label"),
+            createElement("input", { type: "checkbox", className: "check-box", onChange: this.handleChange.bind(this) })
+        );
+    }
+
+    private handleChange(event: Event) {
+        this.setState({ backgroundColor: (event.target as HTMLInputElement).value });
+    }
+
+    public static parseStyle(style = ""): {[key: string]: string} {
+        try {
+            return style.split(";").reduce<{[key: string]: string}>((styleObject, line) => {
+                const pair = line.split(":");
+                if (pair.length === 2) {
+                    const name = pair[0].trim().replace(/(-.)/g, match => match[1].toUpperCase());
+                    styleObject[name] = pair[1].trim();
+                }
+                return styleObject;
+            }, {});
+        } catch (error) {
+            CheckBoxReferenceSetSelectorContainer.logError("Failed to parse style", style, error);
+        }
+
+        return {};
     }
 
     public static logError(message: string, style?: string, error?: any) {

@@ -4,26 +4,40 @@
     <description>Select from many options available in the reference selector</description>
     <icon/>
     <properties>
-<!-- name of the widget -->
-    <!-- <property key="name" type="attribute" defaultValue="">
-         <caption>Name</caption>
-         <category>Name</category>
-         <description>Provide senstive name to the widget</description>
-    <attributeTypes>
-           <attributeType name="String"/>
-    </attributeTypes>
-    </property>
-
-    <property key="dataAssociation" type="entity" isPath="yes" pathType="referenceSet">
-            <caption>Multi Select Source</caption>
+        <property key="captionName" type="string">
+            <caption>checkBoxReferenceSetSelector</caption>
+            <category>behaviour</category>
+            <description/>
+        </property>
+        <property key="dataSourceType" type="enumeration" defaultValue="xpath">
+			<caption>Data source type</caption>
+			<category>Data source</category>
+			<description>The method for retrieving the objects.</description>
+			<enumerationValues>
+				<enumerationValue key="xpath">XPath</enumerationValue>
+				<enumerationValue key="mf">Microflow</enumerationValue>
+			</enumerationValues>
+        </property>
+        <property key="reference" type="entity" isPath="yes" pathType="referenceSet" allowNonPersistableEntities="true">
+            <caption>Association</caption>
             <category>Data source</category>
-            <description>Select the entity in which the multi select options are stored. This property defines the reference between the context object and the tag object. </description>
-        </property> -->
-
-        <property key="check" type="string" defaultValue="">
-        <caption>Check</caption>
-        <category>Select</category>
-        <description/>
+            <description>The reference entity.</description>
+        </property>
+        <property key="displayAttr" type="attribute" isPath="optional" pathType="reference" entityProperty="reference">
+            <caption>Attribute</caption>
+            <category>Data source</category>
+                <description>The attribute to display.</description>
+                <attributeTypes>
+                    <attributeType name="String" />
+                    <attributeType name="Integer" />
+                    <attributeType name="Boolean" />
+                    <attributeType name="Enum" />
+                    <attributeType name="Long" />
+                    <attributeType name="DateTime" />
+                    <attributeType name="AutoNumber" />
+                    <attributeType name="Currency" />
+                    <attributeType name="Float" />
+                </attributeTypes>
         </property>
 </properties>
 </widget>
