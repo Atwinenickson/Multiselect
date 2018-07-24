@@ -1,7 +1,5 @@
 import { Component, createElement } from "react";
 
-import "../ui/checkBoxReferenceSetSelector.scss";
-
 interface WrapperProps {
     class: string;
     mxObject?: mendix.lib.MxObject;
