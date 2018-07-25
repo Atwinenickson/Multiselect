@@ -10,17 +10,51 @@ interface WrapperProps {
 }
 
 export interface ContainerProps extends WrapperProps {
-    checkBox: string;
+    datetimeformat: string;
+    datePattern: string;
+    timePattern: string;
+    decimalPrecision: string;
+    groupDigits: string;
+    onChangeMicroflow: string;
+    onChangeMicroflowShowProgress: string;
+    onChangeMicroflowProgressMessage: string;
+    retrieveType: string;
+    dataAssociation: string;
+    displayTemplate: string;
+    variableName: string;
+    variableAttribute: string;
+    _variableContainer: string;
+    dataConstraint: string;
+    sortContainer: string;
+    sortOrder: string;
+    sortAttribute: string;
+    retrieveMicroflow: string;
+    reloadDataViaAttribute: string;
+    showLabel: string;
+    fieldCaption: string;
+    formOrientation: string;
+    labelWidth: string;
+    addSelectAll: string;
+    addFilter: string;
+    caseSensitiveFilter: string;
+    itemsToDisplay: string;
+    disabled: string;
+    disabledViaAttribute: string;
+    visible: string;
+    visibleViaAttribute: string;
+    selectAllText: string;
+    noneSelectedText: string;
+    allSelectedText: string;
+    numberSelectedText: string;
 }
 
-export interface ContainerState {
-    backgroundColor?: string;
-}
+// export interface ContainerState {
+//  }
 
-export default class MultiselectSetSelectorContainer extends Component<ContainerProps, ContainerState > {
+export default class MultiselectSetSelectorContainer extends Component<ContainerProps> {
 
     readonly state = {
-        backgroundColor: undefined
+        datetimeformat: undefined
     };
 
     constructor(props: ContainerProps) {
@@ -41,7 +75,7 @@ export default class MultiselectSetSelectorContainer extends Component<Container
     }
 
     private handleChange(event: Event) {
-        this.setState({ backgroundColor: (event.target as HTMLInputElement).value });
+        this.setState({ datetimeformat: (event.target as HTMLInputElement).value });
     }
 
     public static parseStyle(style = ""): {[key: string]: string} {
