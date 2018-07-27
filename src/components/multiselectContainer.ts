@@ -1,4 +1,6 @@
 import { Component, createElement } from "react";
+import "../ui/Multiselect.css";
+import React = require("../../node_modules/@types/react");
 
 interface WrapperProps {
     class: string;
@@ -10,77 +12,129 @@ interface WrapperProps {
 }
 
 export interface ContainerProps extends WrapperProps {
-    datetimeformat: string;
-    datePattern: string;
-    timePattern: string;
-    decimalPrecision: string;
-    groupDigits: string;
-    onChangeMicroflow: string;
-    onChangeMicroflowShowProgress: string;
-    onChangeMicroflowProgressMessage: string;
-    retrieveType: string;
-    dataAssociation: string;
-    displayTemplate: string;
-    variableName: string;
-    variableAttribute: string;
-    _variableContainer: string;
-    dataConstraint: string;
-    sortContainer: string;
-    sortOrder: string;
-    sortAttribute: string;
-    retrieveMicroflow: string;
-    reloadDataViaAttribute: string;
-    showLabel: string;
+    dataSource: "xpath" | "microflow";
+    constraint: string;
+    entity: string;
+    displayAttr: string;
+    showLabel1: boolean;
+    sortOrder: "asc" | "desc";
+    formOrientation: "horizontal" | "vertical";
     fieldCaption: string;
-    formOrientation: string;
-    labelWidth: string;
-    addSelectAll: string;
-    addFilter: string;
-    caseSensitiveFilter: string;
-    itemsToDisplay: string;
-    disabled: string;
-    disabledViaAttribute: string;
-    visible: string;
-    visibleViaAttribute: string;
-    selectAllText: string;
-    noneSelectedText: string;
-    allSelectedText: string;
-    numberSelectedText: string;
+    callMicroflow?: string;
+    checkBoxType: string;
+    retrieveMicroflow: string;
+    retrieveType: string;
 }
 
-// export interface ContainerState {
-//  }
-
-export default class MultiselectSetSelectorContainer extends Component<ContainerProps> {
-
-    readonly state = {
-        datetimeformat: undefined
-    };
-
+export default class MultiselectContainer extends Component<ContainerProps> {
+    retrieveMicroflow: any;
+    contextObj: any;
+    readonly state = { };
+    retrieveType: string;
+    entity: string;
+    dataConstraint: any;
+    sortParams: any;
     constructor(props: ContainerProps) {
-        super(props);
-
-        // this.handleChange = this.handleChange.bind(this);
+          super(props);
+          this.xpath = this.xpath.bind(this);
     }
+
+    // private expanded: any;
+    // private checkboxes: HTMLElement;
+   // private Node: any;
 
     render() {
-
-        return createElement("div",
-            {
-                className: "multiselect"
+        return createElement("div", { className: "multiselect" },
+            createElement("div",
+                {
+                    className: "selectBox"
+                },
+                createElement("select", {},
+                    createElement("option", {}, "Select any language")),
+                createElement("div", {
+                    className: "overSelect"
+                })),
+            createElement("div", {
+              //  ref: this.setReference
             },
-            createElement("label"),
-            createElement("input", { type: "checkbox", className: "check-box", onChange: this.handleChange.bind(this) })
+                createElement("label", {},
+                    createElement("input", {
+                        type: "checkbox",
+                        ref: "one"
+                    }
+                    ), "English"
+                ),
+                createElement("label", {},
+                    createElement("input", {
+                        type: "checkbox",
+                        ref: "two"
+                    }
+                    ), "French"
+                ),
+                createElement("label", {},
+                    createElement("input", {
+                        type: "checkbox",
+                        ref: "three"
+                    }
+                    ), "German"
+                )
+            )
         );
+
+    }
+    // retrieves the data from the child entity, applying the required constraint
+    private loadData() {
+        // Important to clear all validations!
+       // clearValidations();
+        if (this.retrieveType === "xpath") {
+            // reset our data
+            const xpath = "//" + this.entity + this.dataConstraint.replace(/\[\%CurrentObject\%\]/gi, this.contextObj.getGuid());
+            mx.data.get({
+                xpath,
+                filter: {
+                    sort: this.sortParams,
+                    offset: 0
+                },
+                callback: MultiselectContainer.bind(this, this.processComboData)
+            });
+        } else {
+            if (this.retrieveMicroflow) {
+                this.execMf(this.contextObj.getGuid(), this.retrieveMicroflow, React.hitch(this, this._processComboData));
+            } else {
+                logger.debug("No retrieve microflow specified");
+            }
+        }
     }
 
-    private handleChange(event: Event) {
-        this.setState({ datetimeformat: (event.target as HTMLInputElement).value });
+    execMf(guid, mf, cb, showProgress, message) {
+         self = this;
+         if (guid && mf) {
+            const options = {
+                params: {
+                    applyto: "selection",
+                    actionname: mf,
+                    guids: [ guid ]
+                }
+            };
+        }
     }
+    // private showCheckboxes = () => {
+    //     // this.checkboxes = document.getElementById("checkboxes") as HTMLElement;
+    //     // tslint:disable-next-line:no-console
+    //     console.log(this.Node.innerHTML);
+    //     // if (!this.expanded) {
+    //     //     this.checkboxes.style.display = "block";
+    //     //     this.expanded = true;
+    //     // } else {
+    //     //     this.checkboxes.style.display = "none";
+    //     //     this.expanded = false;
 
-    public static parseStyle(style = ""): {[key: string]: string} {
+    //     // }
+    // }
+
+    public static parseStyle(style = ""): { [key: string]: string } {
         try {
-            return style.split(";").reduce<{[key: string]: string}>((styleObject, line) => {
+            return style.split(";").reduce<{ [key: string]: string }>((styleObject, line) => {
                 const pair = line.split(":");
                 if (pair.length === 2) {
                     const name = pair[0].trim().replace(/(-.)/g, match => match[1].toUpperCase());
@@ -89,11 +143,15 @@ export default class MultiselectSetSelectorContainer extends Component<Container
                 return styleObject;
             }, {});
         } catch (error) {
-            MultiselectSetSelectorContainer.logError("Failed to parse style", style, error);
+            MultiselectContainer.logError("Failed to parse style", style, error);
         }
 
         return {};
     }
+
+    // private setReference = (Node: HTMLDivElement) => {
+    //     this.Node = Node;
+    // }
 
     public static logError(message: string, style?: string, error?: any) {
         // tslint:disable-next-line:no-console
