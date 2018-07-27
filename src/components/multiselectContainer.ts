@@ -1,6 +1,5 @@
 import { Component, createElement } from "react";
 import "../ui/Multiselect.css";
-import React = require("../../node_modules/@types/react");
 
 interface WrapperProps {
     class: string;
@@ -27,22 +26,10 @@ export interface ContainerProps extends WrapperProps {
 }
 
 export default class MultiselectContainer extends Component<ContainerProps> {
-    retrieveMicroflow: any;
-    contextObj: any;
-    readonly state = { };
-    retrieveType: string;
-    entity: string;
-    dataConstraint: any;
-    sortParams: any;
+    setReference: any;
     constructor(props: ContainerProps) {
           super(props);
-          this.xpath = this.xpath.bind(this);
     }
-
-    // private expanded: any;
-    // private checkboxes: HTMLElement;
-   // private Node: any;
-
     render() {
         return createElement("div", { className: "multiselect" },
             createElement("div",
@@ -55,7 +42,7 @@ export default class MultiselectContainer extends Component<ContainerProps> {
                     className: "overSelect"
                 })),
             createElement("div", {
-              //  ref: this.setReference
+                ref: this.setReference
             },
                 createElement("label", {},
                     createElement("input", {
@@ -82,56 +69,6 @@ export default class MultiselectContainer extends Component<ContainerProps> {
         );
 
     }
-    // retrieves the data from the child entity, applying the required constraint
-    private loadData() {
-        // Important to clear all validations!
-       // clearValidations();
-        if (this.retrieveType === "xpath") {
-            // reset our data
-            const xpath = "//" + this.entity + this.dataConstraint.replace(/\[\%CurrentObject\%\]/gi, this.contextObj.getGuid());
-            mx.data.get({
-                xpath,
-                filter: {
-                    sort: this.sortParams,
-                    offset: 0
-                },
-                callback: MultiselectContainer.bind(this, this.processComboData)
-            });
-        } else {
-            if (this.retrieveMicroflow) {
-                this.execMf(this.contextObj.getGuid(), this.retrieveMicroflow, React.hitch(this, this._processComboData));
-            } else {
-                logger.debug("No retrieve microflow specified");
-            }
-        }
-    }
-
-    execMf(guid, mf, cb, showProgress, message) {
-         self = this;
-         if (guid && mf) {
-            const options = {
-                params: {
-                    applyto: "selection",
-                    actionname: mf,
-                    guids: [ guid ]
-                }
-            };
-        }
-    }
-    // private showCheckboxes = () => {
-    //     // this.checkboxes = document.getElementById("checkboxes") as HTMLElement;
-    //     // tslint:disable-next-line:no-console
-    //     console.log(this.Node.innerHTML);
-    //     // if (!this.expanded) {
-    //     //     this.checkboxes.style.display = "block";
-    //     //     this.expanded = true;
-    //     // } else {
-    //     //     this.checkboxes.style.display = "none";
-    //     //     this.expanded = false;
-
-    //     // }
-    // }
-
     public static parseStyle(style = ""): { [key: string]: string } {
         try {
             return style.split(";").reduce<{ [key: string]: string }>((styleObject, line) => {
