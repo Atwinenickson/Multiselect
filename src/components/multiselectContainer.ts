@@ -3,95 +3,118 @@ import "../ui/Multiselect.css";
 
 interface WrapperProps {
     class: string;
-    mxObject?: mendix.lib.MxObject;
+    mxObject: mendix.lib.MxObject;
     mxform: mxui.lib.form._FormBase;
     style: string;
     readOnly: boolean;
-    friendlyId: string;
+
 }
 
 export interface ContainerProps extends WrapperProps {
-    dataSource: "xpath" | "microflow";
-    constraint: string;
-    entity: string;
-    displayAttr: string;
-    showLabel1: boolean;
-    sortOrder: "asc" | "desc";
-    formOrientation: "horizontal" | "vertical";
-    fieldCaption: string;
-    callMicroflow?: string;
     checkBoxType: string;
-    retrieveMicroflow: string;
-    retrieveType: string;
+    dataSourceType: "xpath" | "microflow";
+    entity1: string;
+    displayAttr: string;
+    fieldCaption: string;
+    constraint: string;
+    sortAttribute: string;
+    labelAttribute: string;
+    sortOrder: string;
+    showLabel: string;
 }
 
-export default class MultiselectContainer extends Component<ContainerProps> {
-    setReference: any;
+export interface ContainerState {
+    checkboxItems: { guid: string, caption: string, isChecked: boolean }[];
+}
+export default class MultiselectContainer extends Component<ContainerProps, ContainerState> {
+    readonly state: ContainerState = {
+        checkboxItems: []
+    };
+    private reference: string;
+    private entity: string;
+    // private captionNode: any;
+
     constructor(props: ContainerProps) {
-          super(props);
+        super(props);
+        this.entity = this.props.entity1.split("/")[1];
+        this.reference = this.props.entity1.split("/")[0];
+        this.getDataFromXPath = this.getDataFromXPath.bind(this);
     }
     render() {
-        return createElement("div", { className: "multiselect" },
-            createElement("div",
-                {
-                    className: "selectBox"
-                },
-                createElement("select", {},
-                    createElement("option", {}, "Select any language")),
-                createElement("div", {
-                    className: "overSelect"
-                })),
-            createElement("div", {
-                ref: this.setReference
-            },
-                createElement("label", {},
-                    createElement("input", {
-                        type: "checkbox",
-                        ref: "one"
-                    }
-                    ), "English"
-                ),
-                createElement("label", {},
-                    createElement("input", {
-                        type: "checkbox",
-                        ref: "two"
-                    }
-                    ), "French"
-                ),
-                createElement("label", {},
-                    createElement("input", {
-                        type: "checkbox",
-                        ref: "three"
-                    }
-                    ), "German"
-                )
-            )
-        );
-
+        return (
+            createElement("div", { className: "multiselect" },
+                    createElement("div",
+                        {
+                            className: "selectBox"
+                        },
+                        createElement("select", {},
+                            createElement("option", {}, "Select any language")),
+                        createElement("div", {
+                            className: "overSelect"
+                        })),
+                    createElement("div", {
+                        id: "checkboxes"
+                    },
+            this.createCheckboxItems()
+        )
+        ));
     }
-    public static parseStyle(style = ""): { [key: string]: string } {
-        try {
-            return style.split(";").reduce<{ [key: string]: string }>((styleObject, line) => {
-                const pair = line.split(":");
-                if (pair.length === 2) {
-                    const name = pair[0].trim().replace(/(-.)/g, match => match[1].toUpperCase());
-                    styleObject[name] = pair[1].trim();
+    componentWillReceiveProps(newProps: ContainerProps) {
+        if (newProps.mxObject !== this.props.mxObject) {
+            this.getDataFromXPath(newProps.mxObject);
+        }
+    }
+
+    private getDataFromXPath = (mxObject: mendix.lib.MxObject) => {
+        if (mxObject) {
+            // const constraint = this.props.constraint.split("[%CurrentObject%]").join(mxObject.getGuid());
+            const xpath = "//" + this.entity;
+            window.mx.data.get({
+                callback: (objs: mendix.lib.MxObject[]) => {
+                     this.processCheckboxItems(objs);
+                    }
+                     ,
+                xpath,
+                filter: {
+                    sort: [ [ this.props.displayAttr, "asc" ] ]
                 }
-                return styleObject;
-            }, {});
-        } catch (error) {
-            MultiselectContainer.logError("Failed to parse style", style, error);
+            });
         }
 
-        return {};
     }
 
-    // private setReference = (Node: HTMLDivElement) => {
-    //     this.Node = Node;
-    // }
+    private processCheckboxItems = (multiSelectObjects: mendix.lib.MxObject[]) => {
+        const referencedObjects = this.props.mxObject.getReferences(this.reference);
 
-    public static logError(message: string, style?: string, error?: any) {
-        // tslint:disable-next-line:no-console
-        window.logger ? window.logger.error(message) : console.log(message, style, error);
+        const checkboxItems = multiSelectObjects.map(mxObj => {
+            const guid = mxObj.getGuid();
+            const caption = mxObj.get(this.props.displayAttr) as string;
+            const isChecked = referencedObjects.indexOf(guid) > -1;
+
+            return {
+                guid,
+                caption,
+                isChecked
+            };
+        });
+        this.setState({ checkboxItems });
+    }
+
+    private createCheckboxItems() {
+        const checkboxarray: any = [];
+        this.state.checkboxItems.map(item => {
+            checkboxarray.push(
+                        createElement("label", {
+                            className: "myClassName"
+                        }, createElement("input", {
+                            type: "checkbox",
+                            isChecked: item.isChecked,
+                            key: item.guid
+                        })
+                        ), item.caption
+                    );
+                });
+
+        return checkboxarray;
     }
 }

@@ -3,222 +3,82 @@
     <name>Multiselect</name>
     <description>Select reference set items using a multi select dropdown</description>
     <icon/>
-     <properties>
-<property key="retrieveType" type="enumeration" defaultValue="xpath">
-            <caption>Retrieve type</caption>
+    <properties>
+    <property key="entity1" isPath="yes" type="entity" pathType="referenceSet" allowNonPersistableEntities="true">
+            <caption>Entity</caption>
             <category>Data source</category>
-            <description>How is the data retrieved.</description>
-            <enumerationValues>
-                <enumerationValue key="xpath">XPath</enumerationValue>
-                <enumerationValue key="microflow">Microflow</enumerationValue>
-            </enumerationValues>
+            <description>The reference set entity</description>
+		</property>
+
+		<property key="dataSourceType" type="enumeration" defaultValue="xpath">
+			<caption>Data source type</caption>
+			<category>Data source</category>
+			<description>The method for retrieving the objects</description>
+			<enumerationValues>
+				<enumerationValue key="xpath">XPath</enumerationValue>
+				<enumerationValue key="microflow">Microflow</enumerationValue>
+			</enumerationValues>
+		</property>
+
+        <property key="displayAttr" type="attribute" entityProperty="entity1" isPath="optional" pathType="reference">
+            <caption>Attribute</caption>
+            <category>Data source</category>
+            <description>The attribute to display</description>
+			<attributeTypes>
+                <attributeType name="Long" />
+				<attributeType name="String" />
+				<attributeType name="AutoNumber" />
+				<attributeType name="Boolean" />
+				<attributeType name="Currency" />
+				<attributeType name="DateTime" />
+				<attributeType name="Enum" />
+				<attributeType name="Float" />
+				<attributeType name="Integer" />
+			</attributeTypes>
+		</property>
+        <property key="constraint" type="entityConstraint" entityProperty="entity1">
+            <caption>XPath constraint</caption>
+            <category>Data source</category>
+            <description>The xpath constraint on the entity</description>
         </property>
-        <property key="dataAssociation" type="entity" required="true" isPath="yes" pathType="referenceSet">
-            <caption>Multi Select Source</caption>
-            <category>Data source</category>
-            <description>Select the entity in which the multi select options are stored. This property defines the reference between the context object and the tag object. </description>
-        </property>
-        <property key="displayTemplate" type="translatableString" required="true" multiline="false">
-            <caption>Display Template</caption>
-            <category>Data source</category>
-            <description>Use ${VARIABLE_NAME} to have the attribute value inserted in this string. Note that this string (including replacements) is interpreted as Plain Text. </description>
-        </property>
-        <property key="_variableContainer" type="object" isList="true" required="true">
-            <caption>Template Attributes</caption>
-            <category>Data source</category>
-            <description></description>
-            <properties>
-                <property key="variableName" type="string" required="true">
-                    <caption>Variable name</caption>
-                    <category>Data source</category>
-                    <description>Identifies the attribute value, this name should be used in 'Item Template' property.</description>
-                </property>
-                <property key="variableAttribute" type="attribute" allowNonPersistableEntities="true" isPath="optional" pathType="reference" entityProperty="../dataAssociation">
-                    <caption>Attribute</caption>
-                    <category>Data source</category>
-                    <description>Value of this attribute will be used to replace ${VARIABLE_NAME}, defined in 'Display Template' property</description>
-                    <attributeTypes>
-                        <attributeType name="AutoNumber"/>
-                        <attributeType name="String" />
-                        <attributeType name="Enum"/>
-                        <attributeType name="Integer"/>
-                        <attributeType name="Float"/>
-                        <attributeType name="Currency"/>
-                        <attributeType name="Decimal"/>
-                        <attributeType name="Long"/>
-                        <attributeType name="DateTime"/>
-                    </attributeTypes>
-                </property>
-                <property key="datetimeformat" type="enumeration" defaultValue="datetime" >
-                    <caption>Date format</caption>
-                    <category>Behaviour</category>
-                    <description>Shows date and/or time according to locale of user.</description>
-                    <enumerationValues>
-                        <enumerationValue key="datetime">Date and time </enumerationValue>
-                        <enumerationValue key="date">Date</enumerationValue>
-                        <enumerationValue key="time">Time</enumerationValue>
-                    </enumerationValues>
-                </property>
-                <property key="datePattern" type="translatableString" required="false">
-                    <caption>Date pattern</caption>
-                    <category>Behaviour</category>
-                    <description>Optional, date pattern to override date part according to dojo/date/locale</description>
-                </property>
-                <property key="timePattern" type="translatableString" required="false">
-                    <caption>Time pattern</caption>
-                    <category>Behaviour</category>
-                    <description>Optional, time pattern to override time part according to dojo/date/locale</description>
-                </property>
-                <property key="decimalPrecision" type="integer" defaultValue="0">
-                    <caption>Decimal precision</caption>
-                    <category>Behaviour</category>
-                    <description>Amount of decimals</description>
-                </property>
-                <property key="groupDigits" type="boolean" defaultValue="true">
-                    <caption>Group digits</caption>
-                    <category>Behaviour</category>
-                    <description>Displays a numeric value with group digits</description>
-                </property>
-            </properties>
-        </property>
-        <property key="dataConstraint" type="entityConstraint" required="false" entityProperty="dataAssociation">
-            <caption>Data constraint</caption>
-            <category>Data source</category>
-            <description>Optional constraint to filter the available options</description>
-        </property>
-        <property key="sortContainer" type="object" isList="true" required="false">
-            <caption>Sort order</caption>
-            <category>Data source</category>
-            <description>The sort order of the objects</description>
-            <properties>
-                <property key="sortAttribute" type="attribute" isPath="optional" pathType="reference" entityProperty="../dataAssociation">
-                    <caption>Attribute</caption>
-                    <category>Data source</category>
-                    <description>An attribute to sort on</description>
-                    <attributeTypes>
-                        <attributeType name="AutoNumber"/>
-                        <attributeType name="Boolean"/>
-                        <attributeType name="Currency"/>
-                        <attributeType name="DateTime"/>
-                        <attributeType name="Enum"/>
-                        <attributeType name="Float"/>
-                        <attributeType name="Integer"/>
-                        <attributeType name="Long"/>
-                        <attributeType name="String"/>
-                    </attributeTypes>
-                </property>
-                <property key="sortOrder" type="enumeration" defaultValue="asc">
-                    <caption>Order</caption>
-                    <category>Data source</category>
-                    <description>The order in which to sort</description>
-                    <enumerationValues>
-                        <enumerationValue key="asc">Ascending</enumerationValue>
-                        <enumerationValue key="desc">Descending</enumerationValue>
-                    </enumerationValues>
-                </property>
-            </properties>
-        </property>
-        <property key="retrieveMicroflow" type="microflow" required="false">
-            <caption>Retrieve microflow</caption>
-            <category>Data source</category>
-            <description>Run this microflow to retrieve the data</description>
-            <returnType type="Object" isList="true" entityProperty="dataAssociation"/>
-        </property>
-        <property key="reloadDataViaAttribute" type="attribute" required="false">
-            <caption>Reload data via attribute</caption>
-            <category>Data source</category>
-            <description>Optional, controls whether the data is reloaded when the context object is refreshed (true = refresh, false = don't refresh)</description>
+		<!-- <property key="dataSourceMicroflow" type="microflow" required="false">
+			<caption>Data source microflow</caption>
+			<category>Data source</category>
+			<description></description>
+			<returnType type="Void" />
+		</property> -->
+		<property key="showLabel" type="boolean" defaultValue="true">
+			<caption>Show Label</caption>
+			<category>Display</category>
+			<description>Show a label for the field</description>
+		</property>
+		<property key="labelCaption" type="translatableString" required="false" multiline="false">
+			<caption>Label Caption</caption>
+			<category>Display</category>
+			<description>Specify the caption to use for the field</description>
+            <translations>
+                <translation lang="en_US">Label</translation>
+                <translation lang="nl_NL">Label</translation>
+            </translations>
+		</property>
+
+        <property key="Selectanylanguage" type="attribute" required="true">
+            <caption>String</caption>
+            <category>Strings</category>
+            <description>Show selected</description>
             <attributeTypes>
-                <attributeType name="Boolean"/>
-            </attributeTypes>
-        </property>
-        <property key="showLabel" type="boolean" defaultValue="true">
-            <caption>Show Label</caption>
-            <category>Display</category>
-            <description>Show a label for the field.</description>
-        </property>
-        <property key="fieldCaption" type="translatableString" required="false" multiline="false">
-            <caption>Label Caption</caption>
-            <category>Display</category>
-            <description>Specify the caption to use for the field</description>
-        </property>
-        <property key="formOrientation" type="enumeration" defaultValue="horizontal">
-            <caption>Form orientation</caption>
-            <category>Display</category>
-            <description>The orientation of the form</description>
-            <enumerationValues>
-                <enumerationValue key="horizontal">Horizontal</enumerationValue>
-                <enumerationValue key="vertical">Vertical</enumerationValue>
-            </enumerationValues>
-        </property>
-        <property key="labelWidth" type="integer" defaultValue="4">
-            <caption>Label Width (weight)</caption>
-            <category>Display</category>
-            <description>The column size of the label control (only applied with horizontal orientation)</description>
-        </property>
-        <property key="addSelectAll" type="boolean" defaultValue="true">
-            <caption>Add Select All</caption>
-            <category>Display</category>
-            <description>Add a 'Select All' checkbox at the top of the option list</description>
-        </property>
-        <property key="addFilter" type="boolean" defaultValue="false">
-            <caption>Add Filter</caption>
-            <category>Display</category>
-            <description>Add a filter at the top of the option list</description>
-        </property>
-        <property key="caseSensitiveFilter" type="boolean" defaultValue="true">
-            <caption>Case Sensitive Filter</caption>
-            <category>Display</category>
-            <description>If the filter is enabled, whether the search is case sensitive or not</description>
-        </property>
-        <property key="itemsToDisplay" type="integer" defaultValue="4">
-            <caption>Items to display</caption>
-            <category>Display</category>
-            <description>The maximum number of selected items to display in the field before being replaced with the text 'n selected'</description>
-        </property>
-        <property key="disabled" type="boolean" defaultValue="false">
-            <caption>Disabled</caption>
-            <category>Display</category>
-            <description>If true, makes the control disabled.</description>
-        </property>
-        <property key="disabledViaAttribute" type="attribute" required="false">
-            <caption>Disabled via attribute</caption>
-            <category>Display</category>
-            <description>Optional, set's control disabled property based on attribute (true = disabled, false = enabled)</description>
-            <attributeTypes>
-                <attributeType name="Boolean"/>
-            </attributeTypes>
-        </property>
-        <property key="visible" type="boolean" defaultValue="true">
-            <caption>Visible</caption>
-            <category>Display</category>
-            <description>If true, makes the control visible.</description>
-        </property>
-        <property key="visibleViaAttribute" type="attribute" required="false">
-            <caption>Visible via attribute</caption>
-            <category>Display</category>
-            <description>Optional, set's control visibility property based on attribute (true = visible, false = hidden)</description>
-            <attributeTypes>
-                <attributeType name="Boolean"/>
-            </attributeTypes>
-        </property>
-        <property key="onChangeMicroflow" type="microflow" required="false">
-            <caption>On change</caption>
-            <category>Events</category>
-            <description>Run this microflow when an item is ticked or unticked</description>
-            <returnType type="Void"/>
-        </property>
-        <property key="onChangeMicroflowShowProgress" type="boolean" defaultValue="true">
-            <caption>Show Progress Bar</caption>
-            <category>Events</category>
-            <description>Controls whether a progress bar should be displayed when executing the onchange microflow</description>
-        </property>
-        <property key="onChangeMicroflowProgressMessage" type="string" required="false">
-            <caption>Progress Message</caption>
-            <category>Events</category>
-            <description>The progress message to show when executing the onchange microflow</description>
-        </property>
-        <property key="selectAllText" type="translatableString">
+				<attributeType name="AutoNumber" />
+				<attributeType name="Boolean" />
+				<attributeType name="Currency" />
+				<attributeType name="DateTime" />
+				<attributeType name="Enum" />
+				<attributeType name="Float" />
+				<attributeType name="Integer" />
+				<attributeType name="Long" />
+				<attributeType name="String" />
+			</attributeTypes>
+		</property>
+         <property key="selectAllText" type="translatableString">
             <caption>Select All text</caption>
             <category>Strings</category>
             <description>The caption to display for the Select All checkbox</description>
@@ -228,5 +88,43 @@
                 <translation lang="nl_NL">Alles selecteren</translation>
             </translations>
         </property>
+        <property key="noneSelectedText" type="translatableString">
+            <caption>None Selected text</caption>
+            <category>Strings</category>
+            <description>The string to display when no option is selected</description>
+            <translations>
+                <translation lang="en_GB">None Selected</translation>
+                <translation lang="en_US">None Selected</translation>
+                <translation lang="nl_NL">Niets geselecteerd</translation>
+            </translations>
+        </property>
+        <property key="allSelectedText" type="translatableString">
+            <caption>All Selected text</caption>
+            <category>Strings</category>
+            <description>The string to display when all options are selected</description>
+            <translations>
+                <translation lang="en_GB">All Selected</translation>
+                <translation lang="en_US">All Selected</translation>
+                <translation lang="nl_NL">Alles geselecteerd</translation>
+            </translations>
+        </property>
+        <property key="numberSelectedText" type="translatableString">
+            <caption># Selected text</caption>
+            <category>Strings</category>
+            <description>The string to display when selected items exceeds the 'Items to display' property (Number will be prepended so ensure you leave a space!)</description>
+            <translations>
+                <translation lang="en_GB"> selected</translation>
+                <translation lang="en_US"> selected</translation>
+                <translation lang="nl_NL"> geselecteerd</translation>
+            </translations>
+        </property>
+
+        <property key="onChangeMicroflow" type="microflow" required="false">
+            <caption>On change</caption>
+            <category>Events</category>
+            <description>Run this microflow when an item is ticked or unticked</description>
+            <returnType type="Void"/>
+        </property>
+
 	</properties>
 </widget>
