@@ -26,10 +26,12 @@ export interface ContainerProps extends WrapperProps {
 export interface ContainerState {
     checkboxItems: { guid: string, caption: string, isChecked: boolean }[];
 }
+
 export default class MultiselectContainer extends Component<ContainerProps, ContainerState> {
     readonly state: ContainerState = {
         checkboxItems: []
     };
+
     private reference: string;
     private entity: string;
     // private captionNode: any;
@@ -42,22 +44,10 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
     }
     render() {
         return (
-            createElement("div", { className: "multiselect" },
-                    createElement("div",
-                        {
-                            className: "selectBox"
-                        },
-                        createElement("select", {},
-                            createElement("option", {}, "Select any language")),
-                        createElement("div", {
-                            className: "overSelect"
-                        })),
-                    createElement("div", {
-                        id: "checkboxes"
-                    },
+            createElement("div", { className: "multi" },
             this.createCheckboxItems()
         )
-        ));
+        );
     }
     componentWillReceiveProps(newProps: ContainerProps) {
         if (newProps.mxObject !== this.props.mxObject) {
@@ -84,11 +74,12 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
     }
 
     private processCheckboxItems = (multiSelectObjects: mendix.lib.MxObject[]) => {
+
         const referencedObjects = this.props.mxObject.getReferences(this.reference);
 
         const checkboxItems = multiSelectObjects.map(mxObj => {
             const guid = mxObj.getGuid();
-            const caption = mxObj.get(this.props.displayAttr) as string;
+            const caption = mxObj.get(this.props.labelAttribute) as string;
             const isChecked = referencedObjects.indexOf(guid) > -1;
 
             return {
@@ -104,6 +95,19 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
         const checkboxarray: any = [];
         this.state.checkboxItems.map(item => {
             checkboxarray.push(
+                createElement("div", { className: "multiselect" },
+                    createElement("div",
+                        {
+                            className: "selectBox"
+                        },
+                        createElement("select", {},
+                            createElement("option", {}, "Select any language")),
+                        createElement("div", {
+                            className: "overSelect"
+                        })),
+                    createElement("div", {
+                        id: "checkboxes"
+                    },
                         createElement("label", {
                             className: "myClassName"
                         }, createElement("input", {
@@ -112,8 +116,9 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
                             key: item.guid
                         })
                         ), item.caption
-                    );
-                });
+                    ))
+            );
+        });
 
         return checkboxarray;
     }
