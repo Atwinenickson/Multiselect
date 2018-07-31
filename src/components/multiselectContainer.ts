@@ -32,7 +32,6 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
     };
     private reference: string;
     private entity: string;
-    // private captionNode: any;
 
     constructor(props: ContainerProps) {
         super(props);
@@ -103,15 +102,15 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
     private createCheckboxItems() {
         const checkboxarray: any = [];
         this.state.checkboxItems.map(item => {
-            checkboxarray.push(
+            checkboxarray.push([
                         createElement("label", {
                             className: "myClassName"
-                        }, createElement("input", {
+                        }),
+                        createElement("input", {
                             type: "checkbox",
                             isChecked: item.isChecked,
                             key: item.guid
-                        })
-                        ), item.caption
+                        }), item.caption ]
                     );
                 });
 
