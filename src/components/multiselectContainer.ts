@@ -17,41 +17,43 @@ export interface ContainerProps extends WrapperProps {
     displayAttr: string;
     fieldCaption: string;
     constraint: string;
-    sortAttribute: string;
-    labelAttribute: string;
     sortOrder: string;
-    showLabel: string;
 }
 
 export interface ContainerState {
     checkboxItems: { guid: string, caption: string, isChecked: boolean }[];
 }
+let expanded = false;
 export default class MultiselectContainer extends Component<ContainerProps, ContainerState> {
     readonly state: ContainerState = {
         checkboxItems: []
     };
     private reference: string;
     private entity: string;
+    private Node: HTMLDivElement;
 
     constructor(props: ContainerProps) {
         super(props);
         this.entity = this.props.entity1.split("/")[1];
         this.reference = this.props.entity1.split("/")[0];
         this.getDataFromXPath = this.getDataFromXPath.bind(this);
+
     }
     render() {
         return (
             createElement("div", { className: "multiselect" },
                     createElement("div",
                         {
-                            className: "selectBox"
+                            className: "selectBox",
+                            onClick: this.showCheckboxes
                         },
-                        createElement("select", {},
+                        createElement("select", { },
                             createElement("option", {}, "Select any language")),
                         createElement("div", {
                             className: "overSelect"
                         })),
                     createElement("div", {
+                        ref: this.setReference,
                         id: "checkboxes"
                     },
             this.createCheckboxItems()
@@ -116,4 +118,21 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
 
         return checkboxarray;
     }
+
+    private setReference = (Node: HTMLDivElement) => {
+        this.Node = Node;
+    }
+
+    private showCheckboxes = () => {
+         const checkboxes = this.Node;
+         if (!expanded) {
+          checkboxes.style.display = "block";
+          expanded = true;
+        } else {
+          checkboxes.style.display = "none";
+          expanded = false;
+        }
+        // tslint:disable-next-line:no-console
+       // console.log(this.Node);
+      }
 }
