@@ -48,7 +48,7 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
                             onClick: this.showCheckboxes
                         },
                         createElement("select", { },
-                            createElement("option", {}, "Select any language")),
+                            createElement("option", {}, "Select from these options available")),
                         createElement("div", {
                             className: "overSelect"
                         })),
