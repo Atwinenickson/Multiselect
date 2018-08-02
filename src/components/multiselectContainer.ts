@@ -22,11 +22,14 @@ export interface ContainerProps extends WrapperProps {
 
 export interface ContainerState {
     checkboxItems: { guid: string, caption: string, isChecked: boolean }[];
+    isChecked: boolean;
 }
 let expanded = false;
 export default class MultiselectContainer extends Component<ContainerProps, ContainerState> {
+    private subscriptionHandles: number[] = [];
     readonly state: ContainerState = {
-        checkboxItems: []
+        checkboxItems: [],
+        isChecked: false
     };
     private reference: string;
     private entity: string;
@@ -37,6 +40,7 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
         this.entity = this.props.entity1.split("/")[1];
         this.reference = this.props.entity1.split("/")[0];
         this.getDataFromXPath = this.getDataFromXPath.bind(this);
+        this.handelChange = this.handelChange.bind(this);
 
     }
     render() {
@@ -63,14 +67,17 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
     componentWillReceiveProps(newProps: ContainerProps) {
         if (newProps.mxObject !== this.props.mxObject) {
             this.getDataFromXPath(newProps.mxObject);
+            this.resetSubscriptions(newProps.mxObject);
+        } else {
+            this.setState({ checkboxItems: [] });
         }
     }
 
     private getDataFromXPath = (mxObject: mendix.lib.MxObject) => {
         if (mxObject) {
-            // const constraint = this.props.constraint.split("[%CurrentObject%]").join(mxObject.getGuid());
-            const xpath = "//" + this.entity;
-            window.mx.data.get({
+             const constraint = this.props.constraint;
+             const xpath = "//" + this.entity + constraint;
+             window.mx.data.get({
                 callback: (objs: mendix.lib.MxObject[]) => {
                      this.processCheckboxItems(objs);
                     }
@@ -98,7 +105,7 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
                 isChecked
             };
         });
-        this.setState({ checkboxItems });
+        this.setState({ checkboxItems, isChecked: true });
     }
 
     private createCheckboxItems() {
@@ -110,6 +117,7 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
                         }),
                         createElement("input", {
                             type: "checkbox",
+                            onChange: this.handelChange,
                             isChecked: item.isChecked,
                             key: item.guid
                         }), item.caption ]
@@ -132,7 +140,31 @@ export default class MultiselectContainer extends Component<ContainerProps, Cont
           checkboxes.style.display = "none";
           expanded = false;
         }
-        // tslint:disable-next-line:no-console
-       // console.log(this.Node);
+      }
+
+    private handelChange(event: any) {
+        const newEvent = event.target;
+        if (newEvent && newEvent.checked) {
+              this.props.mxObject.addReference(this.reference, event.target.value);
+          } else {
+              this.props.mxObject.removeReferences(this.reference, event.target.value);
+          }
+      }
+    private resetSubscriptions(mxObject: mendix.lib.MxObject) {
+          this.subscriptionHandles.forEach(window.mx.data.unsubscribe);
+          this.subscriptionHandles = [];
+
+          this.subscriptionHandles.push(window.mx.data.subscribe({
+              guid: mxObject.getGuid(),
+              attr: this.props.displayAttr,
+              callback: () => this.getDataFromXPath
+
+                        }),
+                        window.mx.data.subscribe({
+                            entity: this.props.entity1,
+                            callback: () => this.getDataFromXPath
+                            }
+                         )
+                    );
       }
 }
