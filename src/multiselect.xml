@@ -43,21 +43,25 @@
             <description>The xpath constraint on the entity</description>
         </property>
 
-		<property key="labelCaption" type="translatableString" required="false" multiline="false">
-			<caption>Label Caption</caption>
-			<category>Display</category>
-			<description>Specify the caption to use for the field</description>
-            <translations>
-                <translation lang="en_US">Label</translation>
-                <translation lang="nl_NL">Label</translation>
-            </translations>
-		</property>
         <property key="onChangeMicroflow" type="microflow" required="false">
             <caption>On change</caption>
             <category>Events</category>
             <description>Run this microflow when an item is ticked or unticked</description>
             <returnType type="Void"/>
         </property>
+
+        <property key="showLabel" type="boolean" defaultValue="true">
+            <caption>Show Label</caption>
+            <category>Display</category>
+            <description>Show a label for the field.</description>
+        </property>
+
+<property key="fieldCaption" type="translatableString" required="false" multiline="false">
+            <caption>Label Caption</caption>
+            <category>Display</category>
+            <description>Specify the caption to use for the field</description>
+        </property>
+
 
 	</properties>
 </widget>
