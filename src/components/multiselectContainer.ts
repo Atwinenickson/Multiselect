@@ -18,7 +18,6 @@ export interface ContainerProps extends WrapperProps {
     fieldCaption: string;
     constraint: string;
     sortOrder: string;
-    showLabel: string;
 }
 
 export interface ContainerState {
