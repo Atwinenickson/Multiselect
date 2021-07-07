@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="com.mendix.widget.custom.multiselect.Multiselect" needsEntityContext="true" offlineCapable="true" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>Multiselect</name>
+    <description>Select reference set items using a multi select dropdown</description>
+    <icon/>
+    <properties>
+    <property key="entity1" isPath="yes" type="entity" pathType="referenceSet" allowNonPersistableEntities="true">
+            <caption>Entity</caption>
+            <category>Data source</category>
+            <description>The reference set entity</description>
+		</property>
+
+		<property key="dataSourceType" type="enumeration" defaultValue="xpath">
+			<caption>Data source type</caption>
+			<category>Data source</category>
+			<description>The method for retrieving the objects</description>
+			<enumerationValues>
+				<enumerationValue key="xpath">XPath</enumerationValue>
+				<enumerationValue key="microflow">Microflow</enumerationValue>
+			</enumerationValues>
+		</property>
+
+        <property key="displayAttr" type="attribute" entityProperty="entity1" isPath="optional" pathType="reference">
+            <caption>Attribute</caption>
+            <category>Data source</category>
+            <description>The attribute to display</description>
+			<attributeTypes>
+                <attributeType name="Long" />
+				<attributeType name="String" />
+				<attributeType name="AutoNumber" />
+				<attributeType name="Boolean" />
+				<attributeType name="Currency" />
+				<attributeType name="DateTime" />
+				<attributeType name="Enum" />
+				<attributeType name="Float" />
+				<attributeType name="Integer" />
+			</attributeTypes>
+		</property>
+
+        <property key="constraint" type="entityConstraint" entityProperty="entity1">
+            <caption>XPath constraint</caption>
+            <category>Data source</category>
+            <description>The xpath constraint on the entity</description>
+        </property>
+
+        <property key="onChangeMicroflow" type="microflow" required="false">
+            <caption>On change</caption>
+            <category>Events</category>
+            <description>Run this microflow when an item is ticked or unticked</description>
+            <returnType type="Void"/>
+        </property>
+
+        <property key="showLabel" type="boolean" defaultValue="true">
+            <caption>Show Label</caption>
+            <category>Display</category>
+            <description>Show a label for the field.</description>
+        </property>
+
+<property key="fieldCaption" type="translatableString" required="false" multiline="false">
+            <caption>Label Caption</caption>
+            <category>Display</category>
+            <description>Specify the caption to use for the field</description>
+        </property>
+
+
+	</properties>
+</widget>
